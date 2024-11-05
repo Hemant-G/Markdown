@@ -10,9 +10,9 @@ function EditWindow() {
   const [data, setdata] = useState("");
 
   return (
-    <>
-      <div className="flex flex-row bg-neutral-800 w-full">
-        <div className="p-0">
+    
+      <div className="flex flex-row bg-[#282c34] w-screen h-screen">
+        <div className="p-0 w-1/2 h-full ">
           <Editor
             value={data}
             onValueChange={(value) => setdata(value)}
@@ -24,20 +24,21 @@ function EditWindow() {
                 fontSize: 15,
                 backgroundColor: '#282c34',
                 color: '#fff',
-                height: '100vh',
-                width: '50vw',
-                overflow: 'auto',
+                height: '100%',
+                width: '100%',
                 padding:'0px',
-                margin:'0px'
+                margin:'0px',
+                overflowY: 'auto',
+                resize:'none'
                 }}
           />
         </div>
-        <div className="w-0.5 bg-gray-300" />
-        <div className="h-screen bg-neutral-800 text-white mx-5 w-full">
-          <Markdown>{data}</Markdown>
+        <div className="w-0.5 bg-gray-300 m-0 h-full" />
+        <div className="h-full bg-neutral-800 text-white px-1 w-1/2 overflow-y-auto">
+          <Markdown >{data}</Markdown>
         </div>
       </div>
-    </>
+  
   );
 }
 
