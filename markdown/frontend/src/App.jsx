@@ -1,13 +1,15 @@
-import { useState } from 'react'
 import './App.css'
-import Editor from './Components/Editor'
+import EditWindow from './Components/EditWindow'
+import NoteBooks from './Components/NoteBooks'
+
 
 function App() {
 
   return (
-    <>
-      <Editor></Editor>
-      
+    <><div className='flex flex-row'>
+      <NoteBooks></NoteBooks>
+      <EditWindow></EditWindow>
+      </div>
     </>
   )
 }
