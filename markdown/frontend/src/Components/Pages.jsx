@@ -2,7 +2,7 @@ import React , {useEffect} from "react";
 
 function Pages({ notes, setNotes, selectedNote, setSelectedPageId, setSelectedNote}) {
   const onSelectPage = (id) => {
-    const page = selectedNote.pages.find((page) => page.id === id);
+    const page = selectedNote.pages.find((page) => page._id === id);
     setSelectedPageId(page);
   };
 
@@ -11,13 +11,12 @@ function Pages({ notes, setNotes, selectedNote, setSelectedPageId, setSelectedNo
     if (newTitle) {
       setNotes((prevNotes) => {                         
         const updatedNote = prevNotes.map((note) =>
-          note.id === noteId
+          note._id === noteId
             ? {
                 ...note,
                 pages: [
                   ...(note.pages || []),
                   {
-                    id: Date.now(),
                     title: newTitle,
                     content: "This is the content.",
                   },
@@ -34,7 +33,7 @@ function Pages({ notes, setNotes, selectedNote, setSelectedPageId, setSelectedNo
 
   useEffect(() => {
     if (selectedNote) {
-      const updatedSelectedNote = notes.find((note) => note.id === selectedNote.id);
+      const updatedSelectedNote = notes.find((note) => note._id === selectedNote._id);
       if (updatedSelectedNote) {
         setSelectedNote(updatedSelectedNote);
       }
@@ -42,20 +41,21 @@ function Pages({ notes, setNotes, selectedNote, setSelectedPageId, setSelectedNo
   }, [notes, selectedNote, setSelectedNote]);
 
   return (
-    <div className="w-[20%] border-r border-gray-300 p-4">
+    <div className="w-[10%] bg-slate-800 p-4">
+      
+      <h3 className="font-bold mb-4 font-bold mb-4 text-violet-200">Pages</h3>
       <button
-        onClick={() => onAddPage(selectedNote.id)}
-        className="mb-4 py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+        onClick={() => onAddPage(selectedNote._id)}
+        className="px-3 bg-gray-700 text-white rounded  hover:bg-slate-500 transition"
       >
         Add Page
       </button>
-      <h2 className="font-bold mb-4">Pages</h2>
       {selectedNote.pages?(<ul>
         {selectedNote.pages.map((page) => (
           <li
-            key={page.id}
-            className="cursor-pointer p-2 hover:bg-gray-200"
-            onClick={() => onSelectPage(page.id)}
+            key={page._id}
+            className="text-slate-400 my-2 cursor-pointer hover:text-white mb-2"
+            onClick={() => onSelectPage(page._id)}
           >
             {page.title}
           </li>

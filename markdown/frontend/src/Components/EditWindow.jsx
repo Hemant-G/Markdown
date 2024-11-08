@@ -13,9 +13,9 @@ function EditWindow({selectedNote, notes, setNotes, selectedPageId}) {
     setdata(newContent)
     setNotes((prevNotes) => {
       const updatedNotes = prevNotes.map((note) => {
-        if (note.id === selectedNote.id) {
+        if (note._id === selectedNote._id) {
           const updatedPages = note.pages.map((page) =>
-            page.id === selectedPageId.id
+            page._id === selectedPageId._id
               ? { ...page, content: newContent } // Update the content of the page
               : page
           );
@@ -29,12 +29,14 @@ function EditWindow({selectedNote, notes, setNotes, selectedPageId}) {
 
   useEffect(() => {
     if (selectedNote && selectedPageId && selectedNote.pages) {
-      const page = selectedNote.pages.find((page) => page.id === selectedPageId.id);
+      const page = selectedNote.pages.find((page) => page._id === selectedPageId._id);
       if (page) {
         setdata(page.content); // Set the content of the selected page to the editor
       }
     }
   }, [selectedNote, selectedPageId])
+
+
 
   return (
     <div className="flex flex-row bg-[#282c34] w-screen h-screen">
@@ -60,7 +62,7 @@ function EditWindow({selectedNote, notes, setNotes, selectedPageId}) {
         />
       </div>
       <div className="w-0.5 bg-gray-300 m-0 h-full" />
-      <div className="h-full bg-neutral-800 text-white px-1 w-1/2 overflow-y-auto">
+      <div className="h-full bg-[#282c34] text-white px-1 w-1/2 overflow-y-auto">
         <Markdown>{data}</Markdown>
       </div>
     </div>

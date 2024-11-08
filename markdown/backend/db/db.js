@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-const connectDB = async () => {
+export const connectDB = async () => {
   try {
     await mongoose.connect('mongodb://localhost:27017/testing')
   } 
@@ -10,4 +10,4 @@ const connectDB = async () => {
   }
 };
 
-module.exports = connectDB;
+
