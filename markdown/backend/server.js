@@ -9,7 +9,7 @@ const database = connectDB()
 
 const port = 3000
 
-app.get('/', (req, res) => {
+app.get('/markdown', (req, res) => {
   Note.find()
   .then( notes =>{
     res.send(notes)

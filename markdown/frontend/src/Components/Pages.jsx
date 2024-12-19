@@ -19,6 +19,7 @@ function Pages({ notes, setNotes, selectedNote, setSelectedPageId, setSelectedNo
                   {
                     title: newTitle,
                     content: "This is the content.",
+                    _id : Date.now()
                   },
                 ],
               }
@@ -34,7 +35,7 @@ function Pages({ notes, setNotes, selectedNote, setSelectedPageId, setSelectedNo
   useEffect(() => {
     if (selectedNote) {
       const updatedSelectedNote = notes.find((note) => note._id === selectedNote._id);
-      if (updatedSelectedNote) {
+      if (updatedSelectedNote && updatedSelectedNote !== selectedNote) {
         setSelectedNote(updatedSelectedNote);
       }
     }
@@ -43,7 +44,7 @@ function Pages({ notes, setNotes, selectedNote, setSelectedPageId, setSelectedNo
   return (
     <div className="w-[10%] bg-slate-800 p-4">
       
-      <h3 className="font-bold mb-4 font-bold mb-4 text-violet-200">Pages</h3>
+      <h3 className="font-bold mb-4 text-violet-200">Pages</h3>
       <button
         onClick={() => onAddPage(selectedNote._id)}
         className="px-3 bg-gray-700 text-white rounded  hover:bg-slate-500 transition"

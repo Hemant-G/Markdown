@@ -12,6 +12,7 @@
       if (newTitle) {
         const newNote = {
           title: newTitle,
+          _id: Date.now(),
 
         };
         setNotes((prevNotes) => [...prevNotes, newNote]);
