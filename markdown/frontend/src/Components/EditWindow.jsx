@@ -9,14 +9,15 @@ import "prismjs/themes/prism.css";
 function EditWindow({selectedNote, notes, setNotes, selectedPageId}) {
   const [data, setdata] = useState("");
 
+
   const onContentChange = (newContent) => {
     setdata(newContent)
     setNotes((prevNotes) => {
       const updatedNotes = prevNotes.map((note) => {
-        if (note._id === selectedNote._id) {
+        if (note._id == selectedNote._id) {
           const updatedPages = note.pages.map((page) =>
-            page._id === selectedPageId._id
-              ? { ...page, content: newContent } // Update the content of the page
+            page._id == selectedPageId
+              ? { ...page, content: newContent } 
               : page
           );
           return { ...note, pages: updatedPages };
@@ -29,9 +30,9 @@ function EditWindow({selectedNote, notes, setNotes, selectedPageId}) {
 
   useEffect(() => {
     if (selectedNote && selectedPageId && selectedNote.pages) {
-      const page = selectedNote.pages.find((page) => page._id === selectedPageId._id);
+      const page = selectedNote.pages.find((page) => page._id == selectedPageId);
       if (page) {
-        setdata(page.content); // Set the content of the selected page to the editor
+        setdata(page.content); 
       }
     }
   }, [selectedNote, selectedPageId])

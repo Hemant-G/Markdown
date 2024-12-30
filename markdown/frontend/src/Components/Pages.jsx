@@ -2,8 +2,8 @@ import React , {useEffect} from "react";
 
 function Pages({ notes, setNotes, selectedNote, setSelectedPageId, setSelectedNote}) {
   const onSelectPage = (id) => {
-    const page = selectedNote.pages.find((page) => page._id === id);
-    setSelectedPageId(page);
+    const page = selectedNote.pages.find((page) => page._id == id);
+    setSelectedPageId(page._id);
   };
 
   const onAddPage = (noteId) => {
@@ -11,7 +11,7 @@ function Pages({ notes, setNotes, selectedNote, setSelectedPageId, setSelectedNo
     if (newTitle) {
       setNotes((prevNotes) => {                         
         const updatedNote = prevNotes.map((note) =>
-          note._id === noteId
+          note._id == noteId
             ? {
                 ...note,
                 pages: [
@@ -34,12 +34,12 @@ function Pages({ notes, setNotes, selectedNote, setSelectedPageId, setSelectedNo
 
   useEffect(() => {
     if (selectedNote) {
-      const updatedSelectedNote = notes.find((note) => note._id === selectedNote._id);
+      const updatedSelectedNote = notes.find((note) => note._id == selectedNote._id);
       if (updatedSelectedNote && updatedSelectedNote !== selectedNote) {
         setSelectedNote(updatedSelectedNote);
       }
     }
-  }, [notes, selectedNote, setSelectedNote]);
+  }, [selectedNote]);
 
   return (
     <div className="w-[10%] bg-slate-800 p-4">
