@@ -6,93 +6,88 @@ import NoteBooks from "./Components/NoteBooks";
 import Pages from "./Components/Pages";
 import MenuBar from "./Components/MenuBar";
 
-
 function App() {
-  const [notes, setNotes] = useState([
-    {
-      pages: [{ }],
-    },
-  ]);
+  const [notes, setNotes] = useState([]);
+  const [selectedNoteId, setSelectedNoteId] = useState(null);
+  const [selectedPageId, setSelectedPageId] = useState(null);
 
-  const [selectedNote, setSelectedNote] = useState(notes[0]);
-  const [selectedPageId, setSelectedPageId] = useState(notes[0].pages[0]._id);
-
+  // Fetch notes when the app loads
   useEffect(() => {
     axios
       .get("http://localhost:3000/markdown")
       .then((res) => {
         setNotes(res.data);
-        setSelectedNote(res.data[0]);
+        setSelectedNoteId(res.data[0]._id);  // Select the first note
       })
-
       .catch((err) => {
         console.log(err);
       });
   }, []);
 
+  // Ensure that a page is selected when a note is selected
   useEffect(() => {
-    if (selectedNote.pages && selectedNote.pages.length > 0) {
-      if (!selectedNote.pages.find((page) => page._id == selectedPageId)) {
-        setSelectedPageId(selectedNote.pages[0]._id);
+    if (selectedNoteId && notes.length > 0) {
+      const note = notes.find((note) => note._id == selectedNoteId);
+      if (note && note.pages.length > 0 && !selectedPageId) {
+        setSelectedPageId(note.pages[0]._id); // Set the first page if none is selected
+      }
     }
-  }
-   }, [selectedNote]); 
+  }, [selectedNoteId, notes]);
 
-
-   useEffect(() => {
-    setSelectedNote(notes.find((note) => note._id == selectedNote._id));
-   }, [notes]);
-
-  const uploadNotes = () => {
-    //Remove these laterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
-
-    console.log(selectedNote.pages.find((page) => page._id == selectedPageId).content)
-    console.log(selectedNote.pages.find((page) => page._id == selectedPageId).title)
-    console.log(selectedNote._id)
-
-    axios
-      .patch(
-        `http://localhost:3000/markdown/${selectedNote._id}/${selectedPageId}`,
-        {content: selectedNote.pages.find((page) => page._id == selectedPageId).content,
-          title: selectedNote.pages.find((page) => page._id == selectedPageId).title}
-      )
-      .then(console.log("Note uploaded"))
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
+  // Update the page every 5 seconds (ensure changes are synced to DB)
   useEffect(() => {
-    const intervalId = setInterval(uploadNotes, 5000);
+    const intervalId = setInterval(() => {
+      const note = notes.find((note) => note._id == selectedNoteId);
+      if (note) {
+        const pageToUpdate = note.pages.find(
+          (page) => page._id == selectedPageId
+        );
+        if (pageToUpdate) {
+          axios
+            .patch(
+              `http://localhost:3000/markdown/${selectedNoteId}/${selectedPageId}`,
+              {
+                content: pageToUpdate.content,
+                title: pageToUpdate.title,
+              }
+            )
+            .then((res) => {
+              console.log("Page updated:", res.data);
+              console.log(selectedNoteId, selectedPageId);
+            })
+            .catch((err) => {
+              console.log("Error updating page:", err);
+            });
+        }
+      }
+    }, 5000);
 
     return () => clearInterval(intervalId);
-  }, [selectedNote, selectedPageId]);
+  }, [selectedNoteId, selectedPageId, notes]);
 
   return (
     <div className="bg-[#282c34]">
-      <MenuBar></MenuBar>
+      <MenuBar />
       <div className="flex flex-row">
         <NoteBooks
           notes={notes}
           setNotes={setNotes}
-          setSelectedNote={setSelectedNote}
-          selectedNote={selectedNote}
-        ></NoteBooks>
-
+          selectedNoteId={selectedNoteId}
+          setSelectedNoteId={setSelectedNoteId}
+        />
         <Pages
           notes={notes}
-          selectedNote={selectedNote}
-          setSelectedNote={setSelectedNote}
-          setSelectedPageId={setSelectedPageId}
           setNotes={setNotes}
-        ></Pages>
-
+          selectedNoteId={selectedNoteId}
+          setSelectedNoteId={setSelectedNoteId}
+          setSelectedPageId={setSelectedPageId}
+        />
         <EditWindow
           notes={notes}
           setNotes={setNotes}
-          selectedNote={selectedNote}
+          selectedNoteId={selectedNoteId}
           selectedPageId={selectedPageId}
-        ></EditWindow>
+        />
       </div>
     </div>
   );

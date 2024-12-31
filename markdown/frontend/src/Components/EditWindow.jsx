@@ -6,18 +6,18 @@ import "prismjs/components/prism-clike";
 import "prismjs/components/prism-javascript";
 import "prismjs/themes/prism.css";
 
-function EditWindow({selectedNote, notes, setNotes, selectedPageId}) {
-  const [data, setdata] = useState("");
-
+function EditWindow({ notes, setNotes, selectedNoteId, selectedPageId }) {
+  const selectedNote = notes.find((note) => note._id == selectedNoteId);
+  const [data, setData] = useState("");
 
   const onContentChange = (newContent) => {
-    setdata(newContent)
+    setData(newContent);
     setNotes((prevNotes) => {
       const updatedNotes = prevNotes.map((note) => {
-        if (note._id == selectedNote._id) {
+        if (note._id == selectedNoteId) {
           const updatedPages = note.pages.map((page) =>
             page._id == selectedPageId
-              ? { ...page, content: newContent } 
+              ? { ...page, content: newContent }
               : page
           );
           return { ...note, pages: updatedPages };
@@ -26,28 +26,26 @@ function EditWindow({selectedNote, notes, setNotes, selectedPageId}) {
       });
       return updatedNotes;
     });
-  }
+  };
 
   useEffect(() => {
-    if (selectedNote && selectedPageId && selectedNote.pages) {
+    if (selectedNote && selectedPageId) {
       const page = selectedNote.pages.find((page) => page._id == selectedPageId);
       if (page) {
-        setdata(page.content); 
+        setData(page.content);
       }
     }
-  }, [selectedNote, selectedPageId])
-
-
+  }, [selectedNote, selectedPageId]);
 
   return (
     <div className="flex flex-row bg-[#282c34] w-screen h-screen">
-      <div className="p-0 w-1/2 h-full ">
+      <div className="p-0 w-1/2 h-full">
         <Editor
           value={data}
           onValueChange={onContentChange}
           highlight={(code) => highlight(code, languages.js)}
           padding={20}
-          placeholder={"WRITE YOUR CSS HERE"}
+          placeholder={"WRITE YOUR NOTES HERE"}
           style={{
             fontFamily: '"Fira Code", "Fira Mono", monospace',
             fontSize: 15,

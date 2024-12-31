@@ -25,6 +25,16 @@ app.post("/markdown", (req, res) => {
     .catch((err) => res.json(err));
 });
 
+app.put("/markdown/:nid", (req, res) => {
+  Note.findOneAndUpdate({ _id: req.params.nid },
+    { $push: { pages: req.body } },
+    { new: true }
+  )
+    .then((note) => res.json(note))
+    .catch((err) => res.json(err));
+}
+);
+
 app.patch("/markdown/:nid/:pid", (req, res) => {
   Note.findOneAndUpdate(
     { _id: req.params.nid, "pages._id": req.params.pid },
@@ -46,11 +56,11 @@ app.delete("/markdown/:nid/:pid", (req, res) => {
     .catch((err) => res.json(err));
 });
 
-app.delete("/markdown/:nid", (req, res) => {
-  Note.findOneAndDelete({ _id: req.params.nid })
-    .then((note) => res.json(note))
-    .catch((err) => res.json(err));
-});
+// app.delete("/markdown/:nid", (req, res) => {
+//   Note.findOneAndDelete({ _id: req.params.nid })
+//     .then((note) => res.json(note))
+//     .catch((err) => res.json(err));
+// });
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
