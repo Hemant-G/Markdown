@@ -59,11 +59,8 @@ function Pages({
         .then(({ updatedNote, updatedPageId }) => { 
           setSelectedNoteId(updatedNote._id);
           setSelectedPageId(updatedPageId);
-          return new Promise((resolve) => resolve());
         })
-        .then(() => {
-          window.location.reload();
-        })
+        .then(()=>window.location.reload())
         .catch((err) => {
           console.log("Error updating page:", err);
         });

@@ -17,7 +17,7 @@ function App() {
       .get("http://localhost:3000/markdown")
       .then((res) => {
         setNotes(res.data);
-        setSelectedNoteId(res.data[0]._id);  // Select the first note
+        setSelectedNoteId(res.data[res.data.length-1]._id);  // Select the first note
       })
       .catch((err) => {
         console.log(err);
@@ -65,6 +65,7 @@ function App() {
     return () => clearInterval(intervalId);
   }, [selectedNoteId, selectedPageId, notes]);
 
+
   return (
     <div className="bg-[#282c34]">
       <MenuBar />
@@ -74,6 +75,7 @@ function App() {
           setNotes={setNotes}
           selectedNoteId={selectedNoteId}
           setSelectedNoteId={setSelectedNoteId}
+          setSelectedPageId={setSelectedPageId}
         />
         <Pages
           notes={notes}
