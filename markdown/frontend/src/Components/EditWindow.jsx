@@ -38,14 +38,14 @@ function EditWindow({ notes, setNotes, selectedNoteId, selectedPageId }) {
   }, [selectedNote, selectedPageId]);
 
   return (
-    <div className="flex flex-row bg-[#282c34] w-screen h-screen">
+    <div className=" flex flex-row bg-[#282c34] w-full h-full">
       <div className="p-0 w-1/2 h-full">
         <Editor
           value={data}
           onValueChange={onContentChange}
           highlight={(code) => highlight(code, languages.js)}
-          padding={20}
-          placeholder={"WRITE YOUR NOTES HERE"}
+          padding={0}
+          placeholder={"Create A Note First"}
           style={{
             fontFamily: '"Fira Code", "Fira Mono", monospace',
             fontSize: 15,
@@ -60,8 +60,8 @@ function EditWindow({ notes, setNotes, selectedNoteId, selectedPageId }) {
           }}
         />
       </div>
-      <div className="w-0.5 bg-gray-300 m-0 h-full" />
-      <div className="h-full bg-[#282c34] text-white px-1 w-1/2 overflow-y-auto">
+      <div className="w-1 rounded-full my-1 bg-gray-300 m-0 h-full" />
+      <div className="flex-shrink-0 h-full bg-[#282c34] text-white w-1/2 overflow-y-auto">
         <Markdown>{data}</Markdown>
       </div>
     </div>

@@ -50,17 +50,38 @@ app.patch("/markdown/:nid/:pid", (req, res) => {
     .catch((err) => res.json(err));
 });
 
-app.delete("/markdown/:nid/:pid", (req, res) => {
-  Note.findOneAndDelete({ _id: req.params.nid, "pages._id": req.params.pid })
+app.patch("/markdown/:nid/:pid/:newtitle", (req, res) => {
+  Note.findOneAndUpdate(
+    { _id: req.params.nid, "pages._id": req.params.pid },
+    { $set: { "pages.$.title": req.params.newtitle } },
+    { new: true }
+  )
+    .then((note) => res.json(note))
+    .catch((err) => res.json(err));
+}) 
+
+app.patch("/markdown/:nid", (req, res) => {
+  Note.findOneAndUpdate({ _id: req.params.nid },
+    { $set: { title: req.body.title } },
+    { new: true }
+  )
     .then((note) => res.json(note))
     .catch((err) => res.json(err));
 });
 
-// app.delete("/markdown/:nid", (req, res) => {
-//   Note.findOneAndDelete({ _id: req.params.nid })
-//     .then((note) => res.json(note))
-//     .catch((err) => res.json(err));
-// });
+app.delete("/markdown/:nid/:pid", (req, res) => {
+  Note.findOneAndUpdate({ _id: req.params.nid },
+    { $pull: { pages: { _id: req.params.pid } } }
+  )
+    .then((note) => res.json(note))
+    .catch((err) => res.json(err));
+});
+
+app.delete("/markdown/:nid", (req, res) => {
+  Note.findOneAndDelete({ _id: req.params.nid })
+    .then((note) => res.json(note))
+    .catch((err) => res.json(err));
+});
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
