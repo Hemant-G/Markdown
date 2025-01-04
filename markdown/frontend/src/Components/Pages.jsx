@@ -128,13 +128,14 @@ function Pages({
   }
 
   return (
-    <div className="h-full w-1/2 bg-slate-800 p-4">
-      <h3 className="font-bold mb-4 text-violet-200">Pages</h3>
+    <div className="h-full w-1/2 bg-indigo-950 py-5 px-1 overflow-auto ">
+      <h4 className="font-bold mb-4 text-violet-200">📄Pages</h4>
       <button
         onClick={() => onAddPage(selectedNoteId)}
-        className="px-3 bg-gray-700 text-white rounded hover:bg-slate-500 transition"
+        className="px-3 bg-transparent border border-slate-300 text-slate-300 rounded-tr rounded-bl
+        transition-all hover:border-slate-50 hover:bg-slate-300 hover:text-slate-950"
       >
-        Add Page
+       + Add Page
       </button>
       {selectedNote?.pages && selectedNote.pages.length > 0 ? (
         <ul>
@@ -143,9 +144,8 @@ function Pages({
               key={page._id}
               className={` ${
                 selectedPageId == page._id
-                  ? "text-fuchsia-300"
-                  : "text-slate-400"
-              } my-2 cursor-pointer hover:text-white mb-2 
+                  ? "text-indigo-200" : "text-slate-400"
+              } my-2 cursor-pointer hover:text-white mb-2 overflow-visible break-words text-sm 
                 `}
               onClick={() => onSelectPage(page._id)}
               onContextMenu={(e) => {
@@ -155,7 +155,7 @@ function Pages({
                 setOpen(true);
               }}
             >
-              {page.title}
+              { selectedPageId == page._id ? "▷"+page.title: page.title}
             </li>
           ))}
         </ul>
@@ -167,6 +167,7 @@ function Pages({
         state={isOpen ? 'open' : 'closed'}
         direction="right"
         onClose={() => setOpen(false)}
+        menuStyle={{ backgroundColor: '#C4BBF0', color: '#363B4E' }}
       >
         <MenuItem onClick={()=>{setSelectedPageId(rightClickedPageId)}}>Open</MenuItem>
         <MenuItem onClick={()=>{renamePage(rightClickedPageId)}}>Rename</MenuItem>

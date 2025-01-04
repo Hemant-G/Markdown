@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
-import Markdown from "react-markdown";
-import Editor from "react-simple-code-editor";
-import { highlight, languages } from "prismjs/components/prism-core";
-import "prismjs/components/prism-clike";
-import "prismjs/components/prism-javascript";
-import "prismjs/themes/prism.css";
+import MDEditor from '@uiw/react-md-editor/nohighlight';
+import wcount from "word-count";
 
-function EditWindow({ notes, setNotes, selectedNoteId, selectedPageId }) {
+
+function EditWindow({ notes, setNotes, selectedNoteId, selectedPageId, setWordCount }) {
   const selectedNote = notes.find((note) => note._id == selectedNoteId);
   const [data, setData] = useState("");
+  setWordCount(wcount(data));
+
+
 
   const onContentChange = (newContent) => {
     setData(newContent);
@@ -38,31 +38,28 @@ function EditWindow({ notes, setNotes, selectedNoteId, selectedPageId }) {
   }, [selectedNote, selectedPageId]);
 
   return (
-    <div className=" flex flex-row bg-[#282c34] w-full h-full">
-      <div className="p-0 w-1/2 h-full">
-        <Editor
-          value={data}
-          onValueChange={onContentChange}
-          highlight={(code) => highlight(code, languages.js)}
-          padding={0}
-          placeholder={"Create A Note First"}
-          style={{
-            fontFamily: '"Fira Code", "Fira Mono", monospace',
-            fontSize: 15,
-            backgroundColor: "#282c34",
-            color: "#fff",
-            height: "100%",
-            width: "100%",
-            padding: "0px",
-            margin: "0px",
-            overflowY: "auto",
-            resize: "none",
-          }}
-        />
+    <div className=" flex flex-row bg-slate-900 w-full h-full">
+      <div className=" w-2/5 h-full">
+         <MDEditor
+        value={data}
+        onChange={onContentChange}
+        height={750}
+        preview="edit"
+        hideToolbar={true}
+      />
       </div>
-      <div className="w-1 rounded-full my-1 bg-gray-300 m-0 h-full" />
-      <div className="flex-shrink-0 h-full bg-[#282c34] text-white w-1/2 overflow-y-auto">
-        <Markdown>{data}</Markdown>
+      <div className="flex-shrink-0 h-full bg-slate-900 text-white w-3/5 overflow-y-auto px-2 ">
+      {/* <MDEditor.Markdown source={data} 
+      height={750}
+      style={{ whiteSpace: 'pre-wrap' }} /> */}
+
+      <MDEditor
+        value={data}
+        height={750}
+        preview="preview"
+        hideToolbar={true}
+      />
+
       </div>
     </div>
   );

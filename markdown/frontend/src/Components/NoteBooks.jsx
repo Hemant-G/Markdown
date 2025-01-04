@@ -99,13 +99,14 @@ function NoteBooks({
 
 
   return (
-    <div className="h-full w-1/2 bg-slate-900 p-4">
-      <h3 className="font-bold mb-4 text-violet-200">Notebooks</h3>
+    <div className="h-full w-1/2 bg-slate-900 py-5 px-1 overflow-auto ">
+      <h4 className="font-bold mb-4 text-violet-200">📓Notebooks</h4>
       <button
         onClick={onAddNote}
-        className="px-3 bg-gray-700 text-white rounded hover:bg-slate-500 transition"
+        className="px-3 bg-transparent border border-slate-300 text-slate-300 rounded-tr rounded-bl
+        transition-all hover:border-slate-50 hover:bg-slate-300 hover:text-slate-950"
       >
-        Add Note
+        + Add Note
       </button>
       <ul>
         {notes.map((note) => (
@@ -119,11 +120,11 @@ function NoteBooks({
               setOpen(true);
             }}
             className={`${
-              selectedNoteId == note._id ? "text-fuchsia-300" : "text-slate-400"
-            }  my-2 cursor-pointer hover:text-white mb-2
+              selectedNoteId == note._id ? "text-indigo-200" : "text-slate-400"
+            }  my-2 cursor-pointer hover:text-violet-50 mb-2 overflow-visible break-words text-sm
             `}
           >
-            {note.title}
+            { selectedNoteId == note._id ? "▷"+note.title : note.title}
           </li>
         ))}
       </ul>
@@ -132,6 +133,7 @@ function NoteBooks({
               state={isOpen ? 'open' : 'closed'}
               direction="right"
               onClose={() => setOpen(false)}
+              menuStyle={{ backgroundColor: '#C4BBF0', color: '#363B4E' }}
             >
               <MenuItem onClick={()=>{setSelectedNoteId(RightClickedNoteId)}}>Open</MenuItem>
               <MenuItem onClick={()=>{renameNote(RightClickedNoteId)}}>Rename</MenuItem>

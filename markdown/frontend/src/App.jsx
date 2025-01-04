@@ -5,6 +5,7 @@ import EditWindow from "./Components/EditWindow";
 import NoteBooks from "./Components/NoteBooks";
 import Pages from "./Components/Pages";
 import MenuBar from "./Components/MenuBar";
+import { ToastContainer, toast } from "react-toastify";
 
 const sendPatchRequest = (noteId, pageId, notes) => {
   const note = notes.find((note) => note._id == noteId);
@@ -19,6 +20,7 @@ const sendPatchRequest = (noteId, pageId, notes) => {
         .then((res) => {
           console.log("Page updated:", res.data);
           console.log(noteId, pageId);
+          return res.data;
         })
         .catch((err) => {
           console.log("Error updating page:", err);
@@ -29,6 +31,20 @@ const sendPatchRequest = (noteId, pageId, notes) => {
 
 function handleUpload(noteId, pageId, notes) {
   sendPatchRequest(noteId, pageId, notes);
+  if (pageId) {
+    const notify = () =>
+      toast("Page Saved!", {
+        position: "bottom-right",
+        autoClose: 700,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    notify();
+  }
 }
 
 function App() {
@@ -36,7 +52,7 @@ function App() {
   const [selectedNoteId, setSelectedNoteId] = useState(null);
   const [selectedPageId, setSelectedPageId] = useState(null);
   const [isManagerOn, setIsManagerOn] = useState(true);
-
+  const [wordCount, setWordCount] = useState(0);
 
   // Fetch notes when the app loads
   useEffect(() => {
@@ -56,7 +72,7 @@ function App() {
     if (selectedNoteId && notes.length > 0) {
       const note = notes.find((note) => note._id == selectedNoteId);
       if (note && note.pages.length > 0 && !selectedPageId) {
-        setSelectedPageId(note.pages[note.pages.length - 1]._id); 
+        setSelectedPageId(note.pages[note.pages.length - 1]._id);
       }
     }
   }, [selectedNoteId, notes]);
@@ -72,52 +88,67 @@ function App() {
   }, [selectedNoteId, selectedPageId, notes]);
 
   return (
-    <div className="bg-[#282c34] h-screen w-screen">
-      <MenuBar
-        handleUpload={handleUpload}
-        notes={notes}
-        selectedNoteId={selectedNoteId}
-        selectedPageId={selectedPageId}
-        isManagerOn={isManagerOn}
-        setIsManagerOn={setIsManagerOn}
-      />
+    <div className="bg-blue-950 h-screen w-screen">
+      <div className="h-1/20">
+        <MenuBar
+          handleUpload={handleUpload}
+          notes={notes}
+          selectedNoteId={selectedNoteId}
+          selectedPageId={selectedPageId}
+          isManagerOn={isManagerOn}
+          setIsManagerOn={setIsManagerOn}
+          wordCount={wordCount}
+        />
+      </div>
 
       <div className="flex flex-row h-full">
         {isManagerOn ? (
-          <div className="w-1/5 h-full flex flex-row">
-          <NoteBooks
-            notes={notes}
-            setNotes={setNotes}
-            selectedNoteId={selectedNoteId}
-            setSelectedNoteId={setSelectedNoteId}
-            setSelectedPageId={setSelectedPageId}
-            isManagerOn={isManagerOn}
-            setIsManagerOn={setIsManagerOn} 
-          />
-          <Pages
-            notes={notes}
-            setNotes={setNotes}
-            selectedNoteId={selectedNoteId}
-            setSelectedNoteId={setSelectedNoteId}
-            setSelectedPageId={setSelectedPageId}
-            selectedPageId={selectedPageId}
-          />
+          <div className="w-1/5 h-full flex flex-row ">
+            <NoteBooks
+              notes={notes}
+              setNotes={setNotes}
+              selectedNoteId={selectedNoteId}
+              setSelectedNoteId={setSelectedNoteId}
+              setSelectedPageId={setSelectedPageId}
+              isManagerOn={isManagerOn}
+              setIsManagerOn={setIsManagerOn}
+            />
+            <Pages
+              notes={notes}
+              setNotes={setNotes}
+              selectedNoteId={selectedNoteId}
+              setSelectedNoteId={setSelectedNoteId}
+              setSelectedPageId={setSelectedPageId}
+              selectedPageId={selectedPageId}
+            />
           </div>
         ) : null}
 
-        <div className= {`${isManagerOn? "w-4/5" : "w-full"} h-full`}>
+        <div className={`${isManagerOn ? "w-4/5" : "w-full"} h-full`}>
           <EditWindow
             notes={notes}
             setNotes={setNotes}
             selectedNoteId={selectedNoteId}
             selectedPageId={selectedPageId}
+            setWordCount={setWordCount}
           />
         </div>
       </div>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
     </div>
   );
 }
 
 export default App;
 export { sendPatchRequest };
-export { handleUpload };

@@ -1,3 +1,28 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+body .w-md-editor-text-pre > code,
+body .w-md-editor-text-input {
+  font-size: 17px !important;
+  line-height: 20px !important;
+}
+
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #363B4E;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #927FBF;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4F3B78;
+}
