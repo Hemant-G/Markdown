@@ -31,10 +31,10 @@ function Pages({
         `http://localhost:3000/markdown/${noteId}`,
         new_page
       );
-      return response.data; // This returns the updated note from the server
+      return response.data;
     } catch (err) {
       console.log("Error:", err);
-      throw err; // Propagate the error to be handled later
+      throw err; 
     }
   };
 
@@ -47,7 +47,7 @@ function Pages({
     };
 
     if (newTitle) {
-      // Optimistically update the state first
+
       setNotes((prevNotes) => {
         return prevNotes.map((note) =>
           note._id == noteId
@@ -59,7 +59,7 @@ function Pages({
         );
       });
 
-      // Send PUT request to server after optimistically updating the local state
+
       sendPutRequest(noteId, new_page)
         .then((updatedNote) => {
           const updatedPageId =
@@ -67,7 +67,6 @@ function Pages({
           return new Promise((resolve) =>
             resolve({ updatedNote, updatedPageId })
           );
-          // Set the selected page ID to the last page
         })
         .then(({ updatedNote, updatedPageId }) => {
           setSelectedNoteId(updatedNote._id);
@@ -128,11 +127,12 @@ function Pages({
   }
 
   return (
-    <div className="h-full w-1/2 bg-indigo-950 py-5 px-1 overflow-auto ">
+    <div className="h-full w-1/2 bg-gradient-to-r from-indigo-950 to-slate-950 py-2 px-1 
+    overflow-auto border-r border-slate-700  rounded-sm">
       <h4 className="font-bold mb-4 text-violet-200">📄Pages</h4>
       <button
         onClick={() => onAddPage(selectedNoteId)}
-        className="px-3 bg-transparent border border-slate-300 text-slate-300 rounded-tr rounded-bl
+        className="px-3 bg-transparent border border-slate-400 text-slate-300 rounded-tr rounded-bl
         transition-all hover:border-slate-50 hover:bg-slate-300 hover:text-slate-950"
       >
        + Add Page
@@ -144,7 +144,7 @@ function Pages({
               key={page._id}
               className={` ${
                 selectedPageId == page._id
-                  ? "text-indigo-200" : "text-slate-400"
+                  ? "text-fuchsia-300" : "text-slate-300"
               } my-2 cursor-pointer hover:text-white mb-2 overflow-visible break-words text-sm 
                 `}
               onClick={() => onSelectPage(page._id)}
@@ -155,7 +155,7 @@ function Pages({
                 setOpen(true);
               }}
             >
-              { selectedPageId == page._id ? "▷"+page.title: page.title}
+              { selectedPageId == page._id ? ">"+page.title: page.title}
             </li>
           ))}
         </ul>

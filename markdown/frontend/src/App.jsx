@@ -77,12 +77,11 @@ function App() {
     }
   }, [selectedNoteId, notes]);
 
-  // Update the page every 5 seconds (ensure changes are synced to DB)
-
+  // Update the page every 10 seconds 
   useEffect(() => {
     const intervalId = setInterval(() => {
       sendPatchRequest(selectedNoteId, selectedPageId, notes);
-    }, 5000);
+    }, 10000);
 
     return () => clearInterval(intervalId);
   }, [selectedNoteId, selectedPageId, notes]);
@@ -101,7 +100,7 @@ function App() {
         />
       </div>
 
-      <div className="flex flex-row h-full">
+      <div className="flex flex-row h-19/20">
         {isManagerOn ? (
           <div className="w-1/5 h-full flex flex-row ">
             <NoteBooks

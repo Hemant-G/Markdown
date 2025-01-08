@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { ControlledMenu, MenuItem } from "@szhsin/react-menu";
 import "@szhsin/react-menu/dist/index.css";
@@ -24,7 +24,7 @@ function NoteBooks({
         "http://localhost:3000/markdown",
         newNote
       );
-      return response.data; // This returns the newly created note from the server
+      return response.data;
     } catch (err) {
       console.log("Error:", err);
       throw err;
@@ -53,12 +53,10 @@ function NoteBooks({
         .catch((err) => {
           console.log("Error creating note:", err);
         });
-
-      // Select the new note immediately
     }
   };
 
-  function renameNote(noteId){
+  function renameNote(noteId) {
     const newtitle = prompt("Enter new title for the note:");
     setNotes((prevNotes) => {
       return prevNotes.map((note) =>
@@ -71,39 +69,38 @@ function NoteBooks({
       );
     });
 
-    axios.patch(`http://localhost:3000/markdown/${noteId}`,
-    {title: newtitle}
-    )
-    .then((res)=>{
-      res.json(res.data);
-    })
-    .catch((err)=>{
-      console.log("Error renaming note:", err);
-    })
+    axios
+      .patch(`http://localhost:3000/markdown/${noteId}`, { title: newtitle })
+      .then((res) => {
+        res.json(res.data);
+      })
+      .catch((err) => {
+        console.log("Error renaming note:", err);
+      });
   }
-  
-  function deleteNote(noteId){
+
+  function deleteNote(noteId) {
     setNotes((prevNotes) => {
       return prevNotes.filter((note) => note._id != noteId);
     });
 
-    axios.delete(`http://localhost:3000/markdown/${noteId}`)
-    .then((res)=>{
-      res.json(res.data);
+    axios
+      .delete(`http://localhost:3000/markdown/${noteId}`)
+      .then((res) => {
+        res.json(res.data);
       })
-    .catch((err)=>{
-      console.log("Error deleting note:", err);
-    })
-    
+      .catch((err) => {
+        console.log("Error deleting note:", err);
+      });
   }
 
-
   return (
-    <div className="h-full w-1/2 bg-slate-900 py-5 px-1 overflow-auto ">
+    <div className="h-full w-1/2 bg-gradient-to-r from-violet-950 to-indigo-950 to-60% py-2 px-1 
+    overflow-y-auto border-r border-slate-700 rounded-sm">
       <h4 className="font-bold mb-4 text-violet-200">📓Notebooks</h4>
       <button
         onClick={onAddNote}
-        className="px-3 bg-transparent border border-slate-300 text-slate-300 rounded-tr rounded-bl
+        className="px-3 bg-transparent border border-slate-400 text-slate-300 rounded-tr rounded-bl
         transition-all hover:border-slate-50 hover:bg-slate-300 hover:text-slate-950"
       >
         + Add Note
@@ -120,24 +117,42 @@ function NoteBooks({
               setOpen(true);
             }}
             className={`${
-              selectedNoteId == note._id ? "text-indigo-200" : "text-slate-400"
+              selectedNoteId == note._id ? "text-fuchsia-300" : "text-slate-300"
             }  my-2 cursor-pointer hover:text-violet-50 mb-2 overflow-visible break-words text-sm
             `}
           >
-            { selectedNoteId == note._id ? "▷"+note.title : note.title}
+            {selectedNoteId == note._id ? ">" + note.title : note.title}
           </li>
         ))}
       </ul>
       <ControlledMenu
-              anchorPoint={anchorPoint}
-              state={isOpen ? 'open' : 'closed'}
-              direction="right"
-              onClose={() => setOpen(false)}
-              menuStyle={{ backgroundColor: '#C4BBF0', color: '#363B4E' }}
-            >
-              <MenuItem onClick={()=>{setSelectedNoteId(RightClickedNoteId)}}>Open</MenuItem>
-              <MenuItem onClick={()=>{renameNote(RightClickedNoteId)}}>Rename</MenuItem>
-              <MenuItem onClick={()=>{deleteNote(RightClickedNoteId)}}>Delete</MenuItem>
+        anchorPoint={anchorPoint}
+        state={isOpen ? "open" : "closed"}
+        direction="right"
+        onClose={() => setOpen(false)}
+        menuStyle={{ backgroundColor: "#C4BBF0", color: "#363B4E" }}
+      >
+        <MenuItem
+          onClick={() => {
+            setSelectedNoteId(RightClickedNoteId);
+          }}
+        >
+          Open
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            renameNote(RightClickedNoteId);
+          }}
+        >
+          Rename
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            deleteNote(RightClickedNoteId);
+          }}
+        >
+          Delete
+        </MenuItem>
       </ControlledMenu>
     </div>
   );
