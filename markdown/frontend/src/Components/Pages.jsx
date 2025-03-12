@@ -28,7 +28,7 @@ function Pages({
   const sendPutRequest = async (noteId, new_page) => {
     try {
       const response = await axios.put(
-        `http://localhost:3000/markdown/${noteId}`,
+        `${import.meta.env.VITE_APP_API_URL}/markdown/${noteId}`,
         new_page
       );
       return response.data;
@@ -95,7 +95,7 @@ function Pages({
       );
     });
 
-    axios.patch(`http://localhost:3000/markdown/${selectedNoteId}/${pageId}/${newtitle}`)
+    axios.patch(`${import.meta.env.VITE_APP_API_URL}/markdown/${selectedNoteId}/${pageId}/${newtitle}`)
     .then((res)=>{
       res.json(res.data);
       })
@@ -116,7 +116,7 @@ function Pages({
       );
     });
 
-    axios.delete(`http://localhost:3000/markdown/${selectedNoteId}/${pageId}`)
+    axios.delete(`${import.meta.env.VITE_APP_API_URL}/markdown/${selectedNoteId}/${pageId}`)
     .then((res)=>{
       res.json(res.data);
       })
@@ -127,7 +127,7 @@ function Pages({
   }
 
   return (
-    <div className="h-full w-1/2 bg-gradient-to-r from-indigo-950 to-slate-950 py-2 px-1 
+    <div className="h-full w-1/2 bg-[#1c162b] py-2 px-1 
     overflow-auto border-r border-slate-700  rounded-sm">
       <h4 className="font-bold mb-4 text-violet-200">📄Pages</h4>
       <button

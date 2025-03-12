@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { ControlledMenu, MenuItem } from "@szhsin/react-menu";
 import "@szhsin/react-menu/dist/index.css";
+import { useAuth0 } from "@auth0/auth0-react";
 
 function NoteBooks({
   notes,
@@ -13,6 +14,7 @@ function NoteBooks({
   const [isOpen, setOpen] = useState(false);
   const [anchorPoint, setAnchorPoint] = useState({ x: 0, y: 0 });
   const [RightClickedNoteId, setRightClickedNoteId] = useState("");
+  const {user, isAuthenticated, getAccessTokenSilently} = useAuth0();
 
   const onSelectNote = (id) => {
     setSelectedNoteId(id);
@@ -20,9 +22,18 @@ function NoteBooks({
 
   const sendPostRequest = async (newNote) => {
     try {
+      // Ensure the user is authenticated before making the request
+      if (!isAuthenticated || !user) {
+        throw new Error("User is not authenticated");
+      }
+    } catch (err) {
+      console.log("Error:", err);
+      throw err;
+    }
+    try {
       const response = await axios.post(
-        "http://localhost:3000/markdown",
-        newNote
+        `${import.meta.env.VITE_APP_API_URL}/markdown`,
+        newNote,
       );
       return response.data;
     } catch (err) {
@@ -37,6 +48,7 @@ function NoteBooks({
       const newNote = {
         title: newTitle,
         pages: [{ title: "Page 1", content: "Write your notes here" }],
+        authorId: user.sub,
       };
       setNotes((prevNotes) => [...prevNotes, newNote]);
 
@@ -70,7 +82,7 @@ function NoteBooks({
     });
 
     axios
-      .patch(`http://localhost:3000/markdown/${noteId}`, { title: newtitle })
+      .patch(`${import.meta.env.VITE_APP_API_URL}/markdown/${noteId}`, { title: newtitle })
       .then((res) => {
         res.json(res.data);
       })
@@ -85,7 +97,7 @@ function NoteBooks({
     });
 
     axios
-      .delete(`http://localhost:3000/markdown/${noteId}`)
+      .delete(`${import.meta.env.VITE_APP_API_URL}/markdown/${noteId}`)
       .then((res) => {
         res.json(res.data);
       })
@@ -95,7 +107,7 @@ function NoteBooks({
   }
 
   return (
-    <div className="h-full w-1/2 bg-gradient-to-r from-violet-950 to-indigo-950 to-60% py-2 px-1 
+    <div className="h-full w-1/2 bg-[#1c162b] py-2 px-1 
     overflow-y-auto border-r border-slate-700 rounded-sm">
       <h4 className="font-bold mb-4 text-violet-200">📓Notebooks</h4>
       <button

@@ -6,6 +6,7 @@ const noteSchema = new Schema({
     title: String,
     content: String,
   }],
+  authorId: String,
 });
 
 export const Note = mongoose.model('Note', noteSchema)

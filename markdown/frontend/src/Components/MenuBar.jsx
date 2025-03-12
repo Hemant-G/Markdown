@@ -1,10 +1,13 @@
 import React from "react";
+import { useAuth0 } from "@auth0/auth0-react";
+import LogoutButton from "./LogoutButton";
 
 function MenuBar({handleUpload,notes,selectedNoteId,selectedPageId,isManagerOn,setIsManagerOn, wordCount}) 
 {
+  const {user, isAuthenticated} = useAuth0();
   return (
     <>
-    <div className="my-0 bg-gradient-to-r from-violet-950 to-slate-950 to-30%  
+    <div className="my-0 bg-gradient-to-r from-[#1c162b] to-[#0D1117] to-30%  
     flex justify-between w-full h-full border-b border-slate-700">
       <div>
       <button
@@ -28,13 +31,25 @@ function MenuBar({handleUpload,notes,selectedNoteId,selectedPageId,isManagerOn,s
         >
           🖫
         </button>
-
+        
       </div>
       
+    {  isAuthenticated && (
+      <div className="flex flex-row justify-end ">
+        <img className="h-full rounded-full" src={user.picture}/> 
+        <div className="text-slate-300 mx-2">
+          {user.name}             
+         </div>
+      </div>
+         
+    )}
+
         <div className="text-slate-300 mx-2">
         {wordCount} words
+        <LogoutButton/>
       </div>
-      </div>
+      
+    </div>
     </>
   );
 }

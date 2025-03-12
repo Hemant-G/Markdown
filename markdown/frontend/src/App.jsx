@@ -6,6 +6,8 @@ import NoteBooks from "./Components/NoteBooks";
 import Pages from "./Components/Pages";
 import MenuBar from "./Components/MenuBar";
 import { ToastContainer, toast } from "react-toastify";
+import { useAuth0 } from "@auth0/auth0-react";
+
 
 const sendPatchRequest = (noteId, pageId, notes) => {
   const note = notes.find((note) => note._id == noteId);
@@ -13,7 +15,7 @@ const sendPatchRequest = (noteId, pageId, notes) => {
     const pageToUpdate = note.pages.find((page) => page._id == pageId);
     if (pageToUpdate) {
       axios
-        .patch(`http://localhost:3000/markdown/${noteId}/${pageId}`, {
+        .patch(`${import.meta.env.VITE_APP_API_URL}/${noteId}/${pageId}`, {
           content: pageToUpdate.content,
           title: pageToUpdate.title,
         })
@@ -54,18 +56,52 @@ function App() {
   const [isManagerOn, setIsManagerOn] = useState(true);
   const [wordCount, setWordCount] = useState(0);
 
+  const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
+  const [token, setToken] = useState(null);
+
+  const fetchNotes = async () => {
+    try {
+      // Get the token directly
+      const tokenSent = await getAccessTokenSilently({
+        audience: import.meta.env.VITE_AUTH0_AUDIENCE,
+      });
+      console.log("Token sent: ", tokenSent);         
+  
+      // Use the token directly in the Axios request
+      await axios
+        .get(`${import.meta.env.VITE_APP_API_URL}/markdown`, {
+          headers: { authorization: `Bearer ${tokenSent}` },  // Use tokenSent here
+        })
+        .then((res) => {
+          console.log("Notes fetched: ", res.data);
+          setNotes(res.data);
+          setSelectedNoteId(res.data[res.data.length - 1]._id);
+        })
+        .catch((err) => {
+          console.log("Error fetching notes:", err);
+        });
+    } catch (err) {
+      console.log("Error:", err);
+    }
+  };
+  
+    // axios
+    //   .get("http://localhost:3000/markdown")
+    //   .then((res) => {
+    //     setNotes(res.data);
+    //     setSelectedNoteId(res.data[res.data.length - 1]._id);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+
+
   // Fetch notes when the app loads
   useEffect(() => {
-    axios
-      .get("http://localhost:3000/markdown")
-      .then((res) => {
-        setNotes(res.data);
-        setSelectedNoteId(res.data[res.data.length - 1]._id);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+    if (isAuthenticated) {
+      fetchNotes();
+    }
+  }, [isAuthenticated]);
 
   // Ensure that a page is selected when a note is selected
   useEffect(() => {
@@ -77,7 +113,7 @@ function App() {
     }
   }, [selectedNoteId, notes]);
 
-  // Update the page every 10 seconds 
+  // Update the page every 10 seconds
   useEffect(() => {
     const intervalId = setInterval(() => {
       sendPatchRequest(selectedNoteId, selectedPageId, notes);
