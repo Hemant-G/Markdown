@@ -9,14 +9,15 @@
 
   const domain = import.meta.env.VITE_AUTH0_DOMAIN
   const clientId = import.meta.env.VITE_AUTH0_CLIENT_ID
+  const audience = import.meta.env.VITE_AUTH0_AUDIENCE
 
   createRoot(document.getElementById("root")).render(
     <Auth0Provider
-      domain
-      clientId
+      domain={domain}
+      clientId={clientId}
       authorizationParams={{
         redirect_uri: window.location.origin + "/markdown",
-        audience:import.meta.env.VITE_AUTH0_AUDIENCE
+        audience: audience
       }}  
                                                                                
     >

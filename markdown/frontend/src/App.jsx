@@ -8,6 +8,7 @@ import MenuBar from "./Components/MenuBar";
 import { ToastContainer, toast } from "react-toastify";
 import { useAuth0 } from "@auth0/auth0-react";
 
+const audience = import.meta.env.VITE_AUTH0_AUDIENCE;
 
 const sendPatchRequest = (noteId, pageId, notes) => {
   const note = notes.find((note) => note._id == noteId);
@@ -15,7 +16,7 @@ const sendPatchRequest = (noteId, pageId, notes) => {
     const pageToUpdate = note.pages.find((page) => page._id == pageId);
     if (pageToUpdate) {
       axios
-        .patch(`${import.meta.env.VITE_APP_API_URL}/${noteId}/${pageId}`, {
+        .patch(`${import.meta.env.VITE_APP_API_URL}/markdown/${noteId}/${pageId}`, {
           content: pageToUpdate.content,
           title: pageToUpdate.title,
         })
@@ -63,7 +64,7 @@ function App() {
     try {
       // Get the token directly
       const tokenSent = await getAccessTokenSilently({
-        audience: import.meta.env.VITE_AUTH0_AUDIENCE,
+        audience: audience,
       });
       console.log("Token sent: ", tokenSent);         
   
