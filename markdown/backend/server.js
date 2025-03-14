@@ -7,6 +7,8 @@ import { auth } from "express-oauth2-jwt-bearer";
 import jwksRsa from "jwks-rsa";
 import jwt from "express-jwt";
 
+console.log("Starting server...")
+
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -99,6 +101,7 @@ app.delete("/markdown/:nid", (req, res) => {
     .then((note) => res.json(note))
     .catch((err) => res.json(err));
 });
+
 
 // app.listen(port, () => {
 //   console.log(`Example app listening on port ${port}`);
