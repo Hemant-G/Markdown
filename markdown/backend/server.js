@@ -100,6 +100,8 @@ app.delete("/markdown/:nid", (req, res) => {
     .catch((err) => res.json(err));
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
+// app.listen(port, () => {
+//   console.log(`Example app listening on port ${port}`);
+// });
+
+export default app;
