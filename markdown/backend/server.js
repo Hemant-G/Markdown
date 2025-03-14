@@ -7,7 +7,6 @@ import { auth } from "express-oauth2-jwt-bearer";
 import jwksRsa from "jwks-rsa";
 import jwt from "express-jwt";
 
-console.log("Starting server...")
 
 const app = express();
 app.use(cors());
@@ -24,6 +23,10 @@ const jwtCheck = auth({
   issuerBaseURL: process.env.AUTH0_ISSUER_URL,
   tokenSigningAlg: process.env.AUTH0_ALGORITHM,
 });
+
+app.get("/", (req, res) => {
+  console.log("Starting server...");
+})
 
 app.get("/markdown", jwtCheck, (req, res) => {
   console.log("Decoded JWT:", req.auth.payload.sub);
