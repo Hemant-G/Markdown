@@ -26,6 +26,7 @@ const jwtCheck = auth({
 
 app.get("/", (req, res) => {
   console.log("Starting server...");
+  res.send("Server started....")
 })
 
 app.get("/markdown", jwtCheck, (req, res) => {
